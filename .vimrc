@@ -1,74 +1,68 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+call plug#begin('~/.vim/plugged')
+  Plug 'dense-analysis/ale'
+  Plug 'puremourning/vimspector'
+  Plug 'micha/vim-colors-solarized'
+  Plug 'preservim/nerdtree'
+  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+  Plug 'junegunn/fzf.vim'
+  Plug 'jistr/vim-nerdtree-tabs'
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+call plug#end()
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'tmhedberg/SimpylFold'
-Plugin 'vim-scripts/indentpython.vim'
-Plugin 'vim-syntastic/syntastic'
-Plugin 'nvie/vim-flake8'
-Plugin 'pangloss/vim-javascript'
-Plugin 'elzr/vim-json'
-Bundle 'Valloric/YouCompleteMe'
+syntax enable
+set background=dark
+colorscheme solarized
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-" filetype plugin on
+au BufNewFile,BufRead *.py,*json
+     \ set expandtab |
+     \ set autoindent |    
+     \ set tabstop=4 |
+     \ set softtabstop=4 |
+     \ set shiftwidth=4 |
 
-" autocompletion window goes away after using
-let g:ycm_autoclose_preview_window_after_completion=1
+au BufNewFile,BufRead *.yml,*.yaml,*.js,*.html
+     \ set expandtab |
+     \ set autoindent |    
+     \ set tabstop=2 |
+     \ set softtabstop=2 |
+     \ set shiftwidth=2 |
 
-" goto definiction
-map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+let g:ale_linters = {
+      \   'python': ['flake8', 'pylint'],
+      \   'ruby': ['standardrb', 'rubocop'],
+      \   'javascript': ['eslint'],
+      \   'R': ['lintr'],
+      \}
 
-" folding code
-set foldmethod=indent
-set foldlevel=99
-" folding shortcut
+let g:ale_fixers = {
+      \    'python': ['black'],
+      \}
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+nmap <F10> :ALEFix<CR>
 nnoremap <space> za
-
-" show existing tab with 4 spaces width
-set tabstop=4
-" when indenting with '>', use 4 spaces width
-set shiftwidth=4
-" On pressing tab, insert 4 spaces
-set expandtab" python PEP8 indentation
-au BufNewFile,BufRead *.py
-    \ set tabstop=4 |
-    \ set softtabstop=4 |
-    \ set shiftwidth=4 |
-    \ set textwidth=79 |
-    \ set expandtab |
-    \ set autoindent |
-    \ set fileformat=unix |
-" fullstack
-au BufNewFile,BufRead *.js,*.html,*.css
-    \ set tabstop=2 |
-    \ set softtabstop=2 |
-    \ set shiftwidth=2 |
-" whitespace showing
-highlight BadWhitespace ctermbg=red guibg=darkred
-au BufRead,BufNewFile *.py,*.pyw,*.c,*.h,*.js match BadWhitespace /\s\+$/
-
-set encoding=utf-8
-
-let python_highlight_all=1
-let g:syntastic_check_on_open = 1
-let g:syntastic_python_checkers = ['pep8']
-let g:syntastic_javascript_checkers = ['eslint']
-syntax on
+nnoremap <C-n> :NERDTreeToggle<CR>
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
 
 set hlsearch
-set laststatus=2
-set t_Co=256
-vnoremap // y/<C-R>"<CR>
-set rtp+=~/.vim/bundle/YouCompleteMe
 
+let g:vimspector_enable_mappings = 'HUMAN'
+let g:vimspector_bottombar_height = 20
