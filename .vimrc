@@ -19,14 +19,14 @@ syntax enable
 set background=dark
 colorscheme solarized
 
-au BufNewFile,BufRead *.py,*json
+au BufNewFile,BufRead *.py
      \ set expandtab |
      \ set autoindent |    
      \ set tabstop=4 |
      \ set softtabstop=4 |
      \ set shiftwidth=4 |
 
-au BufNewFile,BufRead *.yml,*.yaml,*.js,*.html
+au BufNewFile,BufRead *.yml,*.yaml,*.js,*.html,*json
      \ set expandtab |
      \ set autoindent |    
      \ set tabstop=2 |

@@ -1,7 +1,6 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
-
 export TERM=xterm-256color
 # If not running interactively, don't do anything
 case $- in
@@ -17,20 +16,17 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+HISTSIZE=-1
+HISTFILESIZE=-1
 # avoid duplicates..
 HISTCONTROL=ignoredups:erasedups
-
-# append history entries..
-shopt -s histappend
-
-# After each command, save and reload history
-PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
+
+# After each command, save and reload history
+PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
@@ -52,7 +48,7 @@ esac
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
-#force_color_prompt=yes
+force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
@@ -125,7 +121,18 @@ if ! shopt -oq posix; then
   fi
 fi
 
-
 . /usr/share/powerline/bindings/bash/powerline.sh
 tmux
 
+function cdpr() {
+  path=$(pwd)
+  while [ "$path" != "/" ]; do
+    cur_dir="$(dirname "$path")"
+    if [ -f "${cur_dir}/pyproject.toml" ]; then
+      cd $cur_dir
+      return 0
+    else
+      path=$cur_dir
+    fi
+  done
+}
