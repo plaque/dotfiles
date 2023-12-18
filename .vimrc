@@ -7,7 +7,7 @@ endif
 call plug#begin('~/.vim/plugged')
   Plug 'dense-analysis/ale'
   Plug 'puremourning/vimspector'
-  Plug 'micha/vim-colors-solarized'
+  Plug 'altercation/vim-colors-solarized'
   Plug 'preservim/nerdtree'
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
   Plug 'junegunn/fzf.vim'
@@ -18,6 +18,7 @@ call plug#end()
 syntax enable
 set background=dark
 colorscheme solarized
+
 
 au BufNewFile,BufRead *.py
      \ set expandtab |
@@ -44,15 +45,17 @@ let g:ale_fixers = {
       \    'python': ['black'],
       \}
 " use <tab> for trigger completion and navigate to the next complete item
-function! s:check_back_space() abort
+function! CheckBackspace() abort
   let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
+  return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 inoremap <silent><expr> <Tab>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
       \ coc#refresh()
+" use <c-space>for trigger completion
+inoremap <silent><expr> <c-space> coc#refresh()
 
 nmap <F10> :ALEFix<CR>
 nnoremap <space> za
@@ -63,6 +66,8 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 set hlsearch
+highlight CocFloating ctermbg=0
+highlight CocMenuSel ctermbg=6 ctermfg=0
 
 let g:vimspector_enable_mappings = 'HUMAN'
 let g:vimspector_bottombar_height = 20
