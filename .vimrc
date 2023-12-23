@@ -56,6 +56,7 @@ inoremap <silent><expr> <Tab>
       \ coc#refresh()
 " use <c-space>for trigger completion
 inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
 
 nmap <F10> :ALEFix<CR>
 nnoremap <space> za

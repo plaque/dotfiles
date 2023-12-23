@@ -1,0 +1,52 @@
+- name: Config Vim with plugins
+  hosts: ubuntu
+  gather_facts: yes
+  become: no
+  vars:
+    vim_dir: "{{ ansible_env.HOME }}/.vim"
+    vimrc: "{{ ansible_env.HOME }}/.vimrc"
+    tmux_conf: "{{ ansible_env.HOME }}/.tmux.conf"
+  tasks:
+    - name: Update apt cache
+      apt:
+        name: "{{ packages }}"
+        update_cache: yes
+      vars:
+        packages:
+        - vim
+        - ca-certificates
+        - curl
+        - git
+        - gnupg
+        - python3-pip
+        - powerline
+        - tmux
+        - fzf
+        - software-properties-common
+      become: yes
+    - name: add node repo key
+      shell: curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor --yes -o /etc/apt/keyrings/nodesource.gpg
+      become: yes
+    - name: add node repo
+      shell: NODE_MAJOR=20; echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+      become: yes
+    - name: install node
+      apt:
+        name: nodejs
+        update_cache: yes
+      become: yes
+    - name: copy dotfiles in place
+      copy:
+        src: "dotfiles/"
+        dest: "~/"
+        backup: yes
+        mode: 0640
+    - name: Install VIM Plug
+      shell: curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+             https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    - name: install plugins
+      shell: vim -E -s -u "{{ vimrc }}" +PlugInstall +qall -V
+      ignore_errors: true
+    - name: install coc-pyright
+      shell: vim -E -s -u "{{ vimrc }}" +CocInstall coc-pyright coc-json +qall -V
+      ignore_errors: true
