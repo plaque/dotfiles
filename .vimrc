@@ -78,6 +78,8 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
+nnoremap <C-p> :Files<CR>
+
 set hlsearch
 
 let g:vimspector_enable_mappings = 'HUMAN'
