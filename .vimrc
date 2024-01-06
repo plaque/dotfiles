@@ -4,10 +4,22 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
+python3 from powerline.vim import setup as powerline_setup
+python3 powerline_setup()
+python3 del powerline_setup
+" Powerline
+set rtp+=/usr/share/powerline/bindings/vim/
+
+" Always show statusline
+set laststatus=2
+" Use 256 colours (Use this setting only if your terminal supports 256  colours)
+set t_Co=256
+let g:Powerline_symbols = "fancy"
+
 call plug#begin('~/.vim/plugged')
+  Plug 'morhetz/gruvbox'
   Plug 'dense-analysis/ale'
   Plug 'puremourning/vimspector'
-  Plug 'altercation/vim-colors-solarized'
   Plug 'preservim/nerdtree'
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
   Plug 'junegunn/fzf.vim'
@@ -15,9 +27,9 @@ call plug#begin('~/.vim/plugged')
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
-syntax enable
+syntax on
 set background=dark
-colorscheme solarized
+colorscheme gruvbox
 
 
 au BufNewFile,BufRead *.py
@@ -67,8 +79,6 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 set hlsearch
-highlight CocFloating ctermbg=0
-highlight CocMenuSel ctermbg=6 ctermfg=0
 
 let g:vimspector_enable_mappings = 'HUMAN'
 let g:vimspector_bottombar_height = 20
