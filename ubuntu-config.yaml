@@ -24,6 +24,8 @@
         - fzf
         - software-properties-common
       become: yes
+    - name: install zoxide
+      shel: curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
     - name: add node repo key
       shell: curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor --yes -o /etc/apt/keyrings/nodesource.gpg
       become: yes
