@@ -78,7 +78,8 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-nnoremap <C-p> :Files<CR>
+nnoremap <silent> <C-f> :Files<CR>
+nnoremap <silent> <C-g> :GFiles<CR>
 
 set hlsearch
 
