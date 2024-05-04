@@ -136,3 +136,5 @@ function cdpr() {
     fi
   done
 }
+
+eval "$(zoxide init bash --cmd cd)"
