@@ -25,6 +25,7 @@
         - software-properties-common
         - docker.io
         - docker-compose
+        - jq
       become: yes
     - name: install zoxide
       shel: curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
